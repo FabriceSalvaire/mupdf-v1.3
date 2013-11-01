@@ -55,7 +55,9 @@ set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules")
 # Options
 #
 
-#? SET(CMAKE_BUILD_TYPE Release)
+option(BUILD_PYTHON_WRAPPER "Build the SWIG Python Wrapper" OFF)
+
+SET(CMAKE_BUILD_TYPE RELEASE)
 #SET(CMAKE_VERBOSE_MAKEFILE TRUE)
 
 ####################################################################################################
@@ -64,9 +66,21 @@ set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules")
 #
 
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")
-  set(CMAKE_CXX_FLAGS_COMMON  "-Wall -DSystemLinux")
-  set(CMAKE_CXX_FLAGS_DEBUG   "${CMAKE_CXX_FLAGS_COMMON} -g -O0 -DDEBUG")
-  set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_COMMON} -O2")
+  set(CMAKE_CXX_FLAGS_COMMON  "-DSystemLinux -Wall -pipe")
+
+  set(CMAKE_CXX_FLAGS_DEBUG   "${CMAKE_CXX_FLAGS_COMMON} -g -DDEBUG")
+
+  set(CMAKE_CXX_FLAGS_PROFILE   "${CMAKE_CXX_FLAGS_COMMON} -O2 -DNDEBUG -pg")
+#? set(CMAKE_LD_FLAGS_PROFILE   "-pg")
+
+  set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_COMMON} -O2 -DNDEBUG -fomit-frame-pointer")
+
+  set(CMAKE_CXX_FLAGS_COVERAGE "${CMAKE_CXX_FLAGS_COMMON} -g -DDEBUG -pg -fprofile-arcs -ftest-coverage")
+#? set(CMAKE_LD_FLAGS_COVERAGE   "-lgcov")
+
+  set(CMAKE_CXX_FLAGS_NATIVE "${CMAKE_CXX_FLAGS_COMMON} -O2 -DNDEBUG -fomit-frame-pointer -march=native -mfpmath=sse")
+
+  set(CMAKE_CXX_FLAGS_MEMENTO "${CMAKE_CXX_FLAGS_COMMON} -g -DMEMENTO -DDEBUG")
 endif(CMAKE_SYSTEM_NAME MATCHES "Linux")
 
 ####################################################################################################
@@ -109,6 +123,15 @@ include_directories(
 add_subdirectory(scripts)
 add_subdirectory(source)
 add_subdirectory(platform/x11)
+
+####################################################################################################
+#
+# Python Wrapper
+#
+
+if(BUILD_PYTHON_WRAPPER)
+add_subdirectory(bindings)
+endif(BUILD_PYTHON_WRAPPER)
 
 ####################################################################################################
 #
