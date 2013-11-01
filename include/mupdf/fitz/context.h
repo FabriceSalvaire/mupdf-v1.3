@@ -64,6 +64,7 @@ void fz_var_imp(void *);
 	} \
 	if (ctx->error->stack[ctx->error->top--].code > 1)
 
+void fz_set_throw_exit_callback(void (*throw_exit_callback) (char * message));
 int fz_push_try(fz_error_context *ex);
 FZ_NORETURN void fz_throw(fz_context *, int errcode, const char *, ...) __printflike(3, 4);
 FZ_NORETURN void fz_rethrow(fz_context *);

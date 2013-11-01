@@ -84,6 +84,22 @@ void fz_warn(fz_context *ctx, const char *fmt, ...)
  *             catch region entered with code = 1.
  */
 
+
+void
+default_throw_exit_callback(char *message)
+{
+  exit(EXIT_FAILURE);
+}
+
+extern void (*fz_throw_exit_callback) (char * message);
+void (*fz_throw_exit_callback) (char * message) = default_throw_exit_callback;
+
+void
+fz_set_throw_exit_callback(void (*throw_exit_callback) (char * message))
+{
+  fz_throw_exit_callback = throw_exit_callback;
+}
+
 FZ_NORETURN static void throw(fz_error_context *ex);
 
 static void throw(fz_error_context *ex)
@@ -98,7 +114,7 @@ static void throw(fz_error_context *ex)
 		OutputDebugStringA(ex->message);
 		OutputDebugStringA("\n");
 #endif
-		exit(EXIT_FAILURE);
+		fz_throw_exit_callback(ex->message);
 	}
 }
 
