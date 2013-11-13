@@ -48,6 +48,7 @@ install(TARGETS
 
 install(FILES
   ${CMAKE_CURRENT_BINARY_DIR}/mupdf.py
+  MuPDF.py
   DESTINATION lib/python${PYTHON_VERSION})
 
 ####################################################################################################
