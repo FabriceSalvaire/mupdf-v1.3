@@ -15,6 +15,8 @@
 
 # UseOPENJPEG.cmake ?
 
+# cf. FindPkgConfig: a pkg-config module for CMake
+
 # find_path(OPENJPEG2_INCLUDE_DIR openjpeg.h)
 exec_program("pkg-config"
   ARGS "--cflags-only-I libopenjp2"
